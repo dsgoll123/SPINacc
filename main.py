@@ -215,66 +215,16 @@ if "4" in itask:
     # add rights to manipulate file:
     os.chmod(restfile, 0o644)
 
-    for ipool in Yvar.keys():
-        # if ipool!="litter":continue
-        check.display("processing %s..." % ipool, logfile)
-        fx = open(resultpath + ipool + "_R2.txt", "w", 1)
-        fy = open(resultpath + ipool + "_slope.txt", "w", 1)
-        fz = open(resultpath + ipool + "_dNRMSE.txt", "w", 1)
-        fz2 = open(resultpath + ipool + "_sNRMSE.txt", "w", 1)
-        fz3 = open(resultpath + ipool + "_iNRMSE.txt", "w", 1)
-        f1 = open(resultpath + ipool + "_f_SB.txt", "w", 1)
-        f2 = open(resultpath + ipool + "_f_SDSD.txt", "w", 1)
-        f3 = open(resultpath + ipool + "_f_LSC.txt", "w", 1)
-        fxx = open(resultpath + ipool + "_loocv_R2.txt", "w", 1)
-        fyy = open(resultpath + ipool + "_loocv_slope.txt", "w", 1)
-        fzz = open(resultpath + ipool + "_loocv_dNRMSE.txt", "w", 1)
-        ff1 = open(resultpath + ipool + "_loocv_f_SB.txt", "w", 1)
-        ff2 = open(resultpath + ipool + "_loocv_f_SDSD.txt", "w", 1)
-        ff3 = open(resultpath + ipool + "_loocv_f_LSC.txt", "w", 1)
-        ffz2 = open(resultpath + ipool + "_loocv_sNRMSE.txt", "w", 1)
-        ffz3 = open(resultpath + ipool + "_loocv_iNRMSE.txt", "w", 1)
-        #    if ipool!='biomass':
-        #      auxil.pfts=Yvar[ipool][0]['pfts']
-        #      print(auxil.pfts)
-        #      ML_som_litter.MLloop(packdata,auxil,ipool,logfile,varlist,labx,resultpath,fx,fy,fz,fz2,fz3,f1,f2,f3,fxx,fyy,fzz,ff1,ff2,ff3,ffz2,ffz3,loocv)
-        #    else:
-        #      auxil.pfts=range(2,varlist['npfts']+2)#[1:]#Yvar[ipool][0]['pfts']
-        #      print(auxil.pfts)
-        #      ML_biomass.MLloop(packdata,auxil,ipool,logfile,varlist,labx,resultpath,fx,fy,fz,fz2,fz3,f1,f2,f3,fxx,fyy,fzz,ff1,ff2,ff3,ffz2,ffz3,loocv)
-        #    else:continue
-        ML.MLloop(
-            packdata,
-            ipool,
-            logfile,
-            varlist,
-            labx,
-            resultpath,
-            fx,
-            fy,
-            fz,
-            fz2,
-            fz3,
-            f1,
-            f2,
-            f3,
-            fxx,
-            fyy,
-            fzz,
-            ff1,
-            ff2,
-            ff3,
-            ffz2,
-            ffz3,
-            loocv,
-            restfile,
-        )
-        fx.close()
-        fy.close()
-        fz.close()
-        fxx.close()
-        fyy.close()
-        fzz.close()
+    res_df = ML.MLloop(
+        packdata,
+        logfile,
+        varlist,
+        labx,
+        resultpath,
+        loocv,
+        restfile,
+    )
+    res_df.to_csv(resultpath + "MLacc_results.csv")
 
     # we need to handle additional variables in the restart files but are not state variables of ORCHIDEE
 
