@@ -49,6 +49,7 @@ def MLmap_multidim(
     loocv,
     restvar,
     missVal,
+    dataset = []
 ):
     check.display(
         "processing %s, variable %s, index %s (dim: %s)..."
@@ -76,7 +77,8 @@ def MLmap_multidim(
     # end extract Y
     extracted_Y = np.reshape(pool_arr, (len(packdata.Nlat), 1))
     extr_all = np.concatenate((extracted_Y, extr_var, pft_ny), axis=1)
-    df_data = DataFrame(extr_all, columns=[labx])  # convert the array into dataframe
+    df_data = DataFrame(extr_all, columns=labx)  # convert the array into dataframe
+    dataset.append(df_data)
     # df_data.ix[:,22]=(df_data.ix[:,22].astype(int)).astype(str)
     combine_XY = df_data.dropna()  # delete pft=nan
     combine_XY = combine_XY.drop(["pft"], axis=1)
@@ -132,15 +134,15 @@ def MLmap_multidim(
     (
         Tree_Ens,
         predY_train,
-        loocv_R2,
-        loocv_reMSE,
-        loocv_slope,
-        loocv_dNRMSE,
-        loocv_sNRMSE,
-        loocv_iNRMSE,
-        loocv_f_SB,
-        loocv_f_SDSD,
-        loocv_f_LSC,
+        # loocv_R2,
+        # loocv_reMSE,
+        # loocv_slope,
+        # loocv_dNRMSE,
+        # loocv_sNRMSE,
+        # loocv_iNRMSE,
+        # loocv_f_SB,
+        # loocv_f_SDSD,
+        # loocv_f_LSC,
     ) = train.training_BAT(combineXY, logfile, loocv)
 
     if not Tree_Ens:
@@ -173,6 +175,8 @@ def MLmap_multidim(
         return
 
     if (PFT_mask[ipft - 1] > 0).any():
+        return MLeval.evaluation_map(Global_Predicted_Y_map, pool_map, ipft, PFT_mask)
+
         # evaluation
         R2, RMSE, slope, reMSE, dNRMSE, sNRMSE, iNRMSE, f_SB, f_SDSD, f_LSC = (
             MLeval.evaluation_map(Global_Predicted_Y_map, pool_map, ipft, PFT_mask)
@@ -230,47 +234,9 @@ def MLmap_multidim(
             )
         )
         plt.close("all")
-    else:
-        check.display(
-            "%s, variable %s, index %s (dim: %s) : NO DATA!"
-            % (ipool, varname, ind, ii["dim_loop"]),
-            logfile,
-        )
-    fx.write("%.2f" % R2 + ",")
-    fy.write("%.2f" % slope + ",")
-    fz.write("%.2f" % dNRMSE + ",")
-    f1.write("%.2f" % f_SB + ",")
-    f2.write("%.2f" % f_SDSD + ",")
-    f3.write("%.2f" % f_LSC + ",")
-    fz2.write("%.2f" % sNRMSE + ",")
-    fz3.write("%.2f" % iNRMSE + ",")
-    fxx.write("%.2f" % loocv_R2 + ",")
-    fyy.write("%.2f" % loocv_slope + ",")
-    fzz.write("%.2f" % loocv_dNRMSE + ",")
-    ff1.write("%.2f" % loocv_f_SB + ",")
-    ff2.write("%.2f" % loocv_f_SDSD + ",")
-    ff3.write("%.2f" % loocv_f_LSC + ",")
-    ffz2.write("%.2f" % loocv_sNRMSE + ",")
-    ffz3.write("%.2f" % loocv_iNRMSE + ",")
-    if ind[-1] == ii["loops"][ii["dim_loop"][-1]][-1]:
-        print(varname, ind)
-        fx.write("\n")
-        fy.write("\n")
-        fz.write("\n")
-        fz2.write("\n")
-        fz3.write("\n")
-        f1.write("\n")
-        f2.write("\n")
-        f3.write("\n")
-        fxx.write("\n")
-        fyy.write("\n")
-        fzz.write("\n")
-        ff1.write("\n")
-        ff2.write("\n")
-        ff3.write("\n")
-        ffz2.write("\n")
-        ffz3.write("\n")
-    return
+
+    raise ValueError("%s, variable %s, index %s (dim: %s) : NO DATA!"
+                     % (ipool, varname, ind, ii["dim_loop"]))
 
 
 ##@param[in]   packdata               packaged data
@@ -318,6 +284,7 @@ def MLloop(
 
     Yvar = varlist["resp"]["variables"]
 
+    comb_ds = {}
     frames = []
 
     for ipool, iis in Yvar.items():
@@ -391,6 +358,7 @@ def MLloop(
                             loocv,
                             restvar,
                             missVal,
+                            comb_ds.setdefault(ipool, [])
                         )
                         if res:
                             res["var"] = varname
@@ -398,10 +366,17 @@ def MLloop(
                                 res[f"dim_{i+1}"] = k
                                 res[f"ind_{i+1}"] = v
                             result.append(res)
+                            if len(result) > 1:
+                                break
 
                     # close&save netCDF file
                     restnc.close()
+                    if len(result) > 2:
+                        break
 
         frames.append(pd.DataFrame(result).set_index("var"))
 
+    comb_ds = {k: pd.concat(v) for k, v in comb_ds.items()}
+    breakpoint()
+    
     return pd.concat(frames, keys=Yvar.keys(), names=["comp"])
