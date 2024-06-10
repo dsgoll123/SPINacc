@@ -177,19 +177,18 @@ def readvar(varlist, config, logfile):
 
     # insert dimension names for each variable
     for k, v in packdata.items():
-        if k not in ['lat', 'lon']:
-            packdata[k] = (['veget', 'lat', 'lon'][-v.ndim:], v)
-    
+        if k not in ["lat", "lon"]:
+            packdata[k] = (["veget", "lat", "lon"][-v.ndim :], v)
+
     ds = xarray.Dataset(packdata)
-    
+
     ds.attrs.update(
-        nlat=nlat, nlon=nlon,
-        lat_reso=varlist['lat_reso'], lon_reso=varlist['lon_reso']
+        nlat=nlat, nlon=nlon, lat_reso=varlist["lat_reso"], lon_reso=varlist["lon_reso"]
     )
 
     # range of Ks to be tested, and the final K
     maxK = int(config[11].strip())
-    ds.attrs['Ks'] = list(range(2, maxK + 1))
-    ds.attrs['K'] = int(config[9].strip())
+    ds.attrs["Ks"] = list(range(2, maxK + 1))
+    ds.attrs["K"] = int(config[9].strip())
 
     return ds
