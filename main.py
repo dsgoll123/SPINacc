@@ -15,7 +15,7 @@ This software is governed by the XXX license
 XXXX <License content>
 """
 
-import subprocess
+from Tools import *
 
 # added line
 import numpy as np
@@ -54,9 +54,7 @@ resultpath = config[5].strip()
 check.display("results are stored at: " + resultpath, logfile)
 
 # Read list of variables
-# dir_var = "/home/surface3/dgoll/SPINUP_ML/20240208/SPINacc_CNP/DEF_CNP2/"
-dir_var = dir_def
-with open(dir_var + "varlist.json", "r") as f:
+with open(dir_def + "varlist.json", "r") as f:
     varlist = json.loads(f.read())
 
 # load stored results or start from scratch
