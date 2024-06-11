@@ -1,7 +1,5 @@
 # spatial resolution
-reso = 2
-nlat = 90
-nlon = 180
+reso, nlat, nlon = 2, 90, 180
 # number of PFTs
 npft = 15
 # experiment

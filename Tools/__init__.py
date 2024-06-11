@@ -14,8 +14,6 @@
 #
 # =============================================================================================
 
-import calendar
-
 # Ready-made
 import os
 
@@ -23,9 +21,13 @@ import matplotlib
 import numpy as np
 import pandas as pd
 from netCDF4 import Dataset
+import calendar
+import matplotlib
 
 matplotlib.use("Agg")
-import itertools
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+import random
 import json
 import random
 import sys
@@ -40,6 +42,9 @@ from scipy import stats
 from sklearn.cluster import Birch, KMeans
 from sklearn.datasets import make_regression
 from sklearn.ensemble import BaggingRegressor
+from imblearn.over_sampling import SMOTE
+from collections import Counter
+from scipy import stats
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import LeaveOneOut
 from sklearn.tree import DecisionTreeRegressor

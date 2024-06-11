@@ -9,7 +9,7 @@ job.o*
 EXE_DIR
 
 # Config files
-DEF_Trunk*
+DEF_Trunk/
 tests/config.py
 
 # Others
