@@ -1,7 +1,7 @@
 # config[1] : logfile
 log.MLacc_Trunk
 # config[3] : task (1=test clustering/2=clustering/3=compress forcing/4=ML/5=evaluation)
-1
+4
 # config[5] : execution directory
 ./EXE_DIR/  
 # config[7] : start from scratch (0) or read previous results (1)
