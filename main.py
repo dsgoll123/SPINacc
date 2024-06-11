@@ -19,13 +19,10 @@ import subprocess
 
 # added line
 import numpy as np
-<<<<<<< HEAD
 
 from Tools import *
-=======
 import xarray
 import subprocess
->>>>>>> 2e5528e... combine packdata and auxil into a single xarray Dataset
 
 # print Python version
 print(sys.version)
@@ -92,7 +89,7 @@ run_repro_test_task4 = int(config[23].strip())
 if "1" in itask:
     #
     # test clustering
-    dis_all = Cluster.Cluster_test(packdata, auxil, varlist, logfile)
+    dis_all = Cluster.Cluster_test(packdata, varlist, logfile)
     # added line
     np.random.seed(iseed)
     dis_all.dump(resultpath + "dist_all.npy")
