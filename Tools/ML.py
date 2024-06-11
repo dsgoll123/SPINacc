@@ -13,7 +13,10 @@
 # =============================================================================================
 
 from Tools import *
+<<<<<<< HEAD
 import itertools
+=======
+>>>>>>> 59417f5d702c47d36820422b41f9f229533a781b
 
 
 def MLmap_multidim(
@@ -223,6 +226,7 @@ def MLloop(
     missVal = varlist["resp"]["missing_value"]
     Yvar = varlist["resp"]["variables"]
 
+<<<<<<< HEAD
     comb_ds = {}
     frames = []
 
@@ -230,6 +234,17 @@ def MLloop(
         check.display("processing %s..." % ipool, logfile)
         result = []
 
+=======
+    Yvar = varlist["resp"]["variables"]
+
+    comb_ds = {}
+    frames = []
+
+    for ipool, iis in Yvar.items():
+        check.display("processing %s..." % ipool, logfile)
+        result = []
+
+>>>>>>> 59417f5d702c47d36820422b41f9f229533a781b
         for ii in iis:
             for jj in ii["name_prefix"]:
                 for kk in ii["loops"][ii["name_loop"]]:
